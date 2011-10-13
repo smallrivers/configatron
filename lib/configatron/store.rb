@@ -1,9 +1,9 @@
 class Configatron
   class Store
-    if RUBY_VERSION.match(/^1\.9\.[^1]/)
-      require 'syck'
-      ::YAML::ENGINE.yamler = 'syck'
-    end
+    # if RUBY_VERSION.match(/^1\.9\.[^1]/)
+    #   require 'syck'
+    #   ::YAML::ENGINE.yamler = 'syck'
+    # end
 
     alias_method :send!, :send
 
@@ -303,7 +303,8 @@ class Configatron
       if options.is_a?(Hash)
         options.each do |k,v|
           if v.is_a?(Hash)
-            if v.keys.length == 1 && v.keys.first.is_a?(SYCK_CONSTANT)
+            # if v.keys.length == 1 && v.keys.first.is_a?(SYCK_CONSTANT)
+            if v.keys.length == 1
               self.method_missing("#{k}=", v.values.first.flatten)
             else
               self.method_missing(k.to_sym).configure_from_hash(v)
@@ -321,12 +322,12 @@ class Configatron
       undef :test # :nodoc:
     rescue Exception => e
     end
-   
-    if RUBY_PLATFORM == 'java'
-      SYCK_CONSTANT = YAML::Yecht::MergeKey
-    else
-      SYCK_CONSTANT = (RUBY_VERSION.match(/^1\.9/) ? Syck::MergeKey : YAML::Syck::MergeKey) 
-    end
+
+    # if RUBY_PLATFORM == 'java'
+    #   SYCK_CONSTANT = YAML::Yecht::MergeKey
+    # else
+    #   SYCK_CONSTANT = (RUBY_VERSION.match(/^1\.9/) ? Syck::MergeKey : YAML::Syck::MergeKey)
+    # end
 
   end # Store
 end # Configatron
